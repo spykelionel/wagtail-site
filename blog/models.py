@@ -31,6 +31,13 @@ class BlogPage(Page):
         FieldPanel('intro'),
         FieldPanel('body'),
     ]
+    # Add the main_image method:
+    def main_image(self):
+        gallery_item = self.gallery_images.first()
+        if gallery_item:
+            return gallery_item.image
+        else:
+            return None
 
     def get_context(self, request):
         # Update context to include only published posts, ordered by reverse-chron
