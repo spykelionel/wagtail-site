@@ -1,3 +1,5 @@
 *env/
 *__pycache__/
-*medi/
+*media/
+*.sqlite3
+*.sql
