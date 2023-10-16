@@ -1,12 +1,19 @@
+from django.db import models
+
+# Add these:
 from wagtail.models import Page
 from wagtail.fields import RichTextField
 from wagtail.admin.panels import FieldPanel
 
-# add this:
 from wagtail.search import index
 
+class BlogIndexPage(Page):
+    intro = RichTextField(blank=True)
 
-# Keep the definition of BlogIndexPage model, and add the BlogPage model:
+    content_panels = Page.content_panels + [
+        FieldPanel('intro')
+    ]
+
 
 class BlogPage(Page):
     date = models.DateField("Post date")
@@ -23,3 +30,10 @@ class BlogPage(Page):
         FieldPanel('intro'),
         FieldPanel('body'),
     ]
+
+    def get_context(self, request):
+        # Update context to include only published posts, ordered by reverse-chron
+        context = super().get_context(request)
+        blogpages = self.get_children().live().order_by('-first_published_at')
+        context['blogpages'] = blogpages
+        return context
